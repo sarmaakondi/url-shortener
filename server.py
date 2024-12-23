@@ -47,5 +47,14 @@ def create_new_short_url():
     return jsonify({"short_url": f"/s/{short_url}"})
 
 
+@app.get("/s/<short_url>")
+def redirect_to_url(short_url):
+    """Endpoint to redirect to the long URL."""
+    long_url = url_shortener.get_long_url(short_url)
+    if long_url:
+        return redirect(long_url)
+    return jsonify({"error": "URL not found"}), 404
+
+
 if __name__ == "__main__":
     app.run(debug=True)
