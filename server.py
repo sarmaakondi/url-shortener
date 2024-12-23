@@ -30,5 +30,22 @@ class URLShortener:
         return self.url_mappings.get(short_url)
 
 
+# Initialize the URL shortener
+url_shortener = URLShortener()
+
+
+# Routes
+@app.post("/shorten")
+def create_new_short_url():
+    """Endpoint to shorten a URL."""
+    data = request.json
+    if not data or "url" not in data:
+        return jsonify({"error": "Missing 'url' field"}), 400
+
+    long_url = data["url"]
+    short_url = url_shortener.add_mapping(long_url)
+    return jsonify({"short_url": f"/s/{short_url}"})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
